@@ -25,6 +25,6 @@ namespace :fakestore do
       )
     end
 
-    puts "Seeding completed successfully!"
+    puts "Seeding completed!"
   end
 end

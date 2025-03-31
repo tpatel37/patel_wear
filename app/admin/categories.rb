@@ -1,23 +1,14 @@
 ActiveAdmin.register Category do
   permit_params :name
 
-  form do |f|
-    f.inputs 'Category Details' do
-      f.input :name
-    end
-    f.actions
-  end
+  # optional filters and display
+  filter :name
 
   index do
     selectable_column
     id_column
     column :name
+    column :created_at
     actions
-  end
-
-  show do
-    attributes_table do
-      row :name
-    end
   end
 end

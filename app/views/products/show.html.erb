@@ -1,0 +1,12 @@
+<h1><%= @product.name %></h1>
+
+<% if @product.image_url.present? %>
+  <%= image_tag @product.image_url, size: "400x400" %>
+<% else %>
+  <p><strong>No image available</strong></p>
+<% end %>
+
+<p><strong>Description:</strong> <%= @product.description %></p>
+<p><strong>Price:</strong> $<%= @product.price %></p>
+<p><strong>Stock:</strong> <%= @product.stock %></p>
+<p><strong>Category:</strong> <%= @product.category.name if @product.category %></p>

@@ -1,0 +1,14 @@
+<h1>All Products</h1>
+
+<% @products.each do |product| %>
+  <div style="border: 1px solid #ccc; padding: 10px; margin-bottom: 20px;">
+    <h2><%= link_to product.name, product_path(product) %></h2>
+    <% if product.image_url.present? %>
+      <%= image_tag product.image_url, size: "200x200" %>
+    <% else %>
+      <p><strong>No image available</strong></p>
+    <% end %>
+    <p><strong>Price:</strong> $<%= product.price %></p>
+    <p><strong>Category:</strong> <%= product.category.name if product.category %></p>
+  </div>
+<% end %>

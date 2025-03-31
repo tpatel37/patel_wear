@@ -29,8 +29,21 @@ category_names.each do |cat_name|
 end
 
 # Static Pages
-Page.create!(title: 'About', body: 'This is the About page content for Patel Wears.')
-Page.create!(title: 'Contact', body: 'This is the Contact page content for Patel Wears.')
+Page.create!(
+  title: 'About',
+  body: 'Welcome to Patel Wears — where fashion meets sustainability. We are a Winnipeg-based clothing brand dedicated to offering modern, eco-conscious styles for everyday wear. Our mission is to provide premium-quality, affordable clothing while promoting responsible fashion choices. Whether you’re shopping for timeless staples or trendy statement pieces, we’ve got something for everyone. Our team is passionate about bringing you styles that not only look good but also feel good — on your body and for the planet.'
+)
 
+Page.create!(
+  title: 'Contact',
+  body: 'We would love to hear from you! Whether you have a question about our products, your order, or just want to share feedback — feel free to reach out.
+
+Email: support@patelwears.com  
+Phone: +1 (204) 1234567
+Business Hours: Monday to Friday - 9:00 AM to 6:00 PM (CST)  
+Address: 123 Fashion Ave, Winnipeg, MB, Canada
+
+Follow us on Instagram @patelwears for new arrivals, exclusive deals, and more!'
+)
 # Admin user for development
 AdminUser.create!(email: 'admin@example.com', password: 'password', password_confirmation: 'password') if Rails.env.development?
