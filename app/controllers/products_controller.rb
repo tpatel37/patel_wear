@@ -1,57 +1,28 @@
 class ProductsController < ApplicationController
-    before_action :set_product, only: [:show, :edit, :update, :destroy]
-  
-    # GET /products
-    def index
-      @products = Product.all
+  def index
+    @products = Product.all
+
+    if params[:search].present?
+      @products = @products.where("name ILIKE ? OR description ILIKE ?", "%#{params[:search]}%", "%#{params[:search]}%")
     end
-  
-    # GET /products/:id
-    def show
+
+    if params[:category_id].present?
+      @products = @products.where(category_id: params[:category_id])
     end
-  
-    # GET /products/new
-    def new
-      @product = Product.new
+
+    case params[:filter]
+    when "on_sale"
+      @products = @products.where("price < ?", 50)
+    when "new"
+      @products = @products.where("created_at >= ?", 3.days.ago)
+    when "updated"
+      @products = @products.where("updated_at >= ? AND created_at < ?", 3.days.ago, 3.days.ago)
     end
-  
-    # POST /products
-    def create
-      @product = Product.new(product_params)
-      if @product.save
-        redirect_to @product, notice: 'Product was successfully created.'
-      else
-        render :new, status: :unprocessable_entity
-      end
-    end
-  
-    # GET /products/:id/edit
-    def edit
-    end
-  
-    # PATCH/PUT /products/:id
-    def update
-      if @product.update(product_params)
-        redirect_to @product, notice: 'Product was successfully updated.'
-      else
-        render :edit, status: :unprocessable_entity
-      end
-    end
-  
-    # DELETE /products/:id
-    def destroy
-      @product.destroy
-      redirect_to products_url, notice: 'Product was successfully deleted.'
-    end
-  
-    private
-  
-      def set_product
-        @product = Product.find(params[:id])
-      end
-  
-      def product_params
-        params.require(:product).permit(:name, :description, :price, :category_id)
-      end
+
+    @products = @products.page(params[:page]).per(10)
   end
-  
+
+  def show
+    @product = Product.find(params[:id])
+  end
+end

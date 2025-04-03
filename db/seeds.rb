@@ -1,23 +1,67 @@
 require 'faker'
+require 'open-uri'
+require 'json'
 
-# Clear existing records to avoid duplicates (optional, for dev only)
+
 Category.destroy_all
 Product.destroy_all
 Page.destroy_all
 
-# Clothing-related categories
-category_names = [
+
+puts "Seeding categories from scraped data..."
+scraped_categories = ["Milestone", "Scraped Exclusive"]
+scraped_categories.each do |name|
+  Category.create!(name: name)
+end
+
+puts "Seeding products from scraped data..."
+Product.create!(
+  name: "Scraped Cotton Shirt",
+  description: "Imported cotton shirt scraped from demo shop",
+  price: 29.99,
+  stock: 10,
+  category: Category.find_by(name: "Milestone")
+)
+
+
+puts "Seeding products from FakeStoreAPI..."
+
+api_url = "https://fakestoreapi.com/products"
+response = URI.open(api_url).read
+products = JSON.parse(response)
+
+products.each do |item|
+  category = Category.find_or_create_by!(name: item["category"])
+  product = Product.new(
+    name: item["title"],
+    description: item["description"],
+    price: item["price"],
+    stock: rand(1..20),
+    category: category
+  )
+
+  # Attach image if available
+  if item["image"]
+    file = URI.open(item["image"])
+    product.image.attach(io: file, filename: "#{item['id']}.jpg")
+  end
+
+  product.save!
+end
+
+
+puts "Seeding categories and products with Faker..."
+
+clothing_categories = [
   "T-Shirts", "Hoodies", "Jeans", "Jackets", "Dresses",
   "Accessories", "Sustainable Fashion", "Customizable Apparel",
   "Footwear", "Kids Wear", "Men's Wear", "Women's Wear"
 ]
 
-# Create categories and products
-category_names.each do |cat_name|
-  cat = Category.create!(name: cat_name)
+clothing_categories.each do |cat_name|
+  cat = Category.find_or_create_by!(name: cat_name)
 
-  # Add products to each category
-  25.times do
+  105.times do
     Product.create!(
       name: Faker::Commerce.product_name,
       description: Faker::Lorem.paragraph,
@@ -28,22 +72,21 @@ category_names.each do |cat_name|
   end
 end
 
-# Static Pages
+
+puts "Seeding About & Contact pages..."
+
 Page.create!(
   title: 'About',
-  body: 'Welcome to Patel Wears — where fashion meets sustainability. We are a Winnipeg-based clothing brand dedicated to offering modern, eco-conscious styles for everyday wear. Our mission is to provide premium-quality, affordable clothing while promoting responsible fashion choices. Whether you’re shopping for timeless staples or trendy statement pieces, we’ve got something for everyone. Our team is passionate about bringing you styles that not only look good but also feel good — on your body and for the planet.'
+  body: 'Welcome to Patel Wears — where fashion meets sustainability. We are a Winnipeg-based clothing brand dedicated to offering modern, eco-conscious styles for everyday wear...'
 )
 
 Page.create!(
   title: 'Contact',
-  body: 'We would love to hear from you! Whether you have a question about our products, your order, or just want to share feedback — feel free to reach out.
-
-Email: support@patelwears.com  
-Phone: +1 (204) 1234567
-Business Hours: Monday to Friday - 9:00 AM to 6:00 PM (CST)  
-Address: 123 Fashion Ave, Winnipeg, MB, Canada
-
-Follow us on Instagram @patelwears for new arrivals, exclusive deals, and more!'
+  body: 'We would love to hear from you! Whether you have a question about our products, your order, or just want to share feedback — feel free to reach out. Email: support@patelwears.com ...'
 )
-# Admin user for development
+
+
+puts "Creating admin user..."
 AdminUser.create!(email: 'admin@example.com', password: 'password', password_confirmation: 'password') if Rails.env.development?
+
+puts " Done seeding all data!"

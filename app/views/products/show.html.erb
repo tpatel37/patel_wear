@@ -1,7 +1,19 @@
+<%= render "shared/breadcrumbs" %>
 <h1><%= @product.name %></h1>
+<p>
+  <a href="<%= products_path %>" style="padding: 6px 12px; background: #eee; border: 1px solid #ccc; text-decoration: none;">
+    Back to All Products
+  </a>
+</p>
+<%= button_to "Add to Cart", add_to_cart_path(@product), method: :post, data: { turbo: false } %>
 
-<% if @product.image_url.present? %>
-  <%= image_tag @product.image_url, size: "400x400" %>
+
+
+
+
+
+<% if @product.image.attached? %>
+  <%= image_tag url_for(@product.image), size: "400x400" %>
 <% else %>
   <p><strong>No image available</strong></p>
 <% end %>
