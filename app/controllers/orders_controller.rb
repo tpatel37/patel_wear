@@ -107,4 +107,3 @@ class OrdersController < ApplicationController
     params.require(:order).permit(:address)
   end
 end
-l
