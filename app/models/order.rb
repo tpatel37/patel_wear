@@ -15,3 +15,4 @@ class Order < ApplicationRecord
     ["id", "customer_id", "province_id", "status", "total", "created_at", "updated_at"]
   end
 end
+k
