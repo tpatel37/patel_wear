@@ -4,4 +4,4 @@ class CategoriesController < ApplicationController
       @products = @category.products
     end
   end
-  j
+  
