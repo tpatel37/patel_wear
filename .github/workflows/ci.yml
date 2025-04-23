@@ -1,12 +1,6 @@
 name: Rails CI
 
-on:
-  push:
-    branches:
-      - main
-  pull_request:
-    branches:
-      - main
+on: [push]
 
 jobs:
   test:
@@ -15,36 +9,41 @@ jobs:
     services:
       postgres:
         image: postgres:13
-        ports: ['5432:5432']
         env:
-          POSTGRES_DB: test
           POSTGRES_USER: postgres
           POSTGRES_PASSWORD: password
+          POSTGRES_DB: test
+        ports: ["5432:5432"]
         options: >-
           --health-cmd pg_isready
           --health-interval 10s
           --health-timeout 5s
           --health-retries 5
 
+    env:
+      RAILS_ENV: test
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: password
+      POSTGRES_DB: test
+
     steps:
-      - uses: actions/checkout@v3
+    - uses: actions/checkout@v3
 
-      - name: Set up Ruby
-        uses: ruby/setup-ruby@v1
-        with:
-          ruby-version: '3.1.2' # Match your local Ruby version
+    - name: Set up Ruby
+      uses: ruby/setup-ruby@v1
+      with:
+        ruby-version: 3.1
 
-      - name: Install dependencies
-        run: |
-          gem install bundler
-          bundle install
+    - name: Install dependencies
+      run: |
+        gem install bundler
+        bundle install --jobs 4 --retry 3
 
-      - name: Set up database
-        run: |
-          cp config/database.yml.github-actions config/database.yml
-          bin/rails db:create
-          bin/rails db:schema:load
+    - name: Prepare database
+      run: |
+        cp config/database.yml.github-actions config/database.yml
+        bin/rails db:create
+        bin/rails db:schema:load
 
-      - name: Run tests
-        run: |
-          bin/rails test
+    - name: Run tests
+      run: bin/rails test
