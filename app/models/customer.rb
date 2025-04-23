@@ -20,4 +20,3 @@ class Customer < ApplicationRecord
     ["orders", "province"]
   end
 end
-k
