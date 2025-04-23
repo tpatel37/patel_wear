@@ -22,3 +22,4 @@ class CustomersController < ApplicationController
     params.require(:customer).permit(:address, :province_id)
   end
 end
+k
