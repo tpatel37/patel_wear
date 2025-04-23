@@ -3,4 +3,3 @@ class ApplicationController < ActionController::Base
     session[:customer_return_to] || root_path
   end
 end
-d
