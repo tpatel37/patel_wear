@@ -9,5 +9,5 @@ class Page < ApplicationRecord
       []  
     end
   
-  en
+  end
   
