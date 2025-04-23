@@ -18,4 +18,4 @@ class AdminUser < ApplicationRecord
   def self.ransackable_associations(auth_object = nil)
     []
   end
-en
+end
