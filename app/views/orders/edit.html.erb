@@ -1,0 +1,13 @@
+<h1>Edit Order Address</h1>
+
+<%= form_with model: @order, local: true do |f| %>
+  <div>
+    <%= f.label :address, "New Address:" %><br>
+    <%= f.text_area :address, rows: 3 %>
+  </div>
+
+  <div>
+    <%= f.submit "Update Address", class: "btn btn-primary" %>
+    <%= link_to "Cancel", order_path(@order), class: "btn btn-secondary" %>
+  </div>
+<% end %>

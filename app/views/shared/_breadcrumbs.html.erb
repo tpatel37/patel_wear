@@ -1,0 +1,28 @@
+<nav aria-label="breadcrumb">
+  <ul style="list-style: none; display: flex; gap: 10px; padding-left: 0;">
+    <li><%= link_to 'Home', root_path %></li>
+
+    <% if controller_name == 'categories' && action_name == 'show' %>
+      <li>&gt;</li>
+      <li><%= link_to 'Products', products_path %></li>
+      <% if defined?(@category) && @category.present? %>
+        <li>&gt;</li>
+        <li><%= @category.name %></li>
+      <% end %>
+
+    <% elsif controller_name == 'products' && action_name == 'show' %>
+      <li>&gt;</li>
+      <li><%= link_to 'Products', products_path %></li>
+      <% if defined?(@product) && @product.present? && @product.category.present? %>
+        <li>&gt;</li>
+        <li><%= link_to @product.category.name, category_path(@product.category) %></li>
+        <li>&gt;</li>
+        <li><%= @product.name %></li>
+      <% end %>
+
+    <% elsif controller_name == 'products' && action_name == 'index' %>
+      <li>&gt;</li>
+      <li>All Products</li>
+    <% end %>
+  </ul>
+</nav>

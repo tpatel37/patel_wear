@@ -1,0 +1,29 @@
+<h1>Pay with PayPal</h1>
+
+<!-- PayPal SDK -->
+<script src="https://www.paypal.com/sdk/js?client-id=ARrilW9HEASEMibfyVgzyozRGOHI8k3SrOF2ukQ4n9rMLgFMk3zedUQB50znvi9UlSSTOmYwZBlaYHDV&currency=CAD"></script>
+
+
+<div id="paypal-button-container"></div>
+
+<script>
+  document.addEventListener("DOMContentLoaded", function () {
+    paypal.Buttons({
+      createOrder: function (data, actions) {
+        return actions.order.create({
+          purchase_units: [{
+            amount: {
+              value: "<%= Order.find(params[:order_id]).total.round(2) %>" // Order total from backend
+            }
+          }]
+        });
+      },
+      onApprove: function (data, actions) {
+        return actions.order.capture().then(function (details) {
+          // Redirect to confirmation route
+          window.location.href = "/orders/confirm_payment?paypal_order_id=" + data.orderID;
+        });
+      }
+    }).render('#paypal-button-container');
+  });
+</script>
