@@ -27,8 +27,8 @@ class OrdersController < ApplicationController
     @order = Order.new(
       customer: customer,
       province_id: province.id,
-      address: customer.address,         # ✅ Snapshot of address at order time
-      gst: gst_rate,                     # ✅ Tax rates snapshot at order time
+      address: customer.address,         
+      gst: gst_rate,                     
       pst: pst_rate,
       hst: hst_rate,
       status: "pending"
@@ -107,3 +107,4 @@ class OrdersController < ApplicationController
     params.require(:order).permit(:address)
   end
 end
+l
