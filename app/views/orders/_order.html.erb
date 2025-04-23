@@ -1,0 +1,61 @@
+<div>  
+  <%= link_to 'Home', root_path %> |
+  <%= link_to 'All Products', products_path %>
+</div>
+
+<h1>My Past Orders</h1>
+
+
+<p><strong>Current Address:</strong> <%= current_customer.address %></p>
+<p><strong>Current Province:</strong> <%= current_customer.province.name if current_customer.province %></p>
+
+
+<p>
+  <%= link_to "Edit My Address", edit_customer_path(current_customer), class: "btn btn-warning" %>
+</p>
+
+<hr>
+
+<% @orders.each do |order| %>
+  <div style="border: 1px solid #ccc; padding: 15px; margin-bottom: 20px;">
+    <h2>Order ##<%= order.id %></h2>
+    <p><strong>Status:</strong> <%= order.status.present? ? order.status.titleize : "Unknown" %></p>
+    <p><strong>Delivered Address:</strong> <%= order.address %></p>
+    <p><strong>Province:</strong> <%= order.province.name if order.province %></p>
+
+    <ul>
+      <% order.order_items.each do |item| %>
+        <li>
+          <strong><%= item.product.name %></strong> - Quantity: <%= item.quantity %>, Price: $<%= '%.2f' % item.price %>
+        </li>
+      <% end %>
+    </ul>
+
+    <% subtotal = order.order_items.sum { |item| item.price * item.quantity } %>
+    <% gst = order.gst.to_f %>
+    <% pst = order.pst.to_f %>
+    <% hst = order.hst.to_f %>
+
+    <% gst_amount = subtotal * gst %>
+    <% pst_amount = subtotal * pst %>
+    <% hst_amount = subtotal * hst %>
+
+    <% total_tax = gst_amount + pst_amount + hst_amount %>
+    <% grand_total = subtotal + total_tax %>
+
+    <p><strong>Subtotal:</strong> $<%= '%.2f' % subtotal %></p>
+
+    <% if gst_amount > 0 %>
+      <p><strong>GST:</strong> $<%= '%.2f' % gst_amount %></p>
+    <% end %>
+    <% if pst_amount > 0 %>
+      <p><strong>PST:</strong> $<%= '%.2f' % pst_amount %></p>
+    <% end %>
+    <% if hst_amount > 0 %>
+      <p><strong>HST:</strong> $<%= '%.2f' % hst_amount %></p>
+    <% end %>
+
+    <p><strong>Total Tax:</strong> $<%= '%.2f' % total_tax %></p>
+    <p><strong>Grand Total:</strong> $<%= '%.2f' % grand_total %></p>
+  </div>
+<% end %>

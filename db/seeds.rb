@@ -3,11 +3,26 @@ require 'open-uri'
 require 'json'
 
 
-Category.destroy_all
 Product.destroy_all
+Category.destroy_all
 Page.destroy_all
+Province.destroy_all
 
-
+Province.create!([
+  { name: "Alberta", gst: 5, pst: 0, hst: 0 },
+  { name: "British Columbia", gst: 5, pst: 7, hst: 0 },
+  { name: "Manitoba", gst: 5, pst: 7, hst: 0 },
+  { name: "New Brunswick", gst: 0, pst: 0, hst: 15 },
+  { name: "Newfoundland and Labrador", gst: 0, pst: 0, hst: 15 },
+  { name: "Northwest Territories", gst: 5, pst: 0, hst: 0 },
+  { name: "Nova Scotia", gst: 0, pst: 0, hst: 15 },
+  { name: "Nunavut", gst: 5, pst: 0, hst: 0 },
+  { name: "Ontario", gst: 0, pst: 0, hst: 13 },
+  { name: "Prince Edward Island", gst: 0, pst: 0, hst: 15 },
+  { name: "Quebec", gst: 5, pst: 9.975, hst: 0 },
+  { name: "Saskatchewan", gst: 5, pst: 6, hst: 0 },
+  { name: "Yukon", gst: 5, pst: 0, hst: 0 }
+])
 puts "Seeding categories from scraped data..."
 scraped_categories = ["Milestone", "Scraped Exclusive"]
 scraped_categories.each do |name|
@@ -87,6 +102,9 @@ Page.create!(
 
 
 puts "Creating admin user..."
-AdminUser.create!(email: 'admin@example.com', password: 'password', password_confirmation: 'password') if Rails.env.development?
+AdminUser.find_or_create_by!(email: 'admin@example.com') do |admin|
+  admin.password = 'password'
+  admin.password_confirmation = 'password'
+end
 
 puts " Done seeding all data!"

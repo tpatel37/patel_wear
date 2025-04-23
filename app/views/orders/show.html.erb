@@ -1,0 +1,37 @@
+<h1>Order Confirmation</h1>
+
+<p><strong>Name:</strong> <%= @customer.name %></p>
+<p><strong>Email:</strong> <%= @customer.email %></p>
+<p><strong>Address at Time of Order:</strong> <%= @order.address %></p>
+
+<hr>
+
+<h2>Items:</h2>
+<ul>
+  <% @order_items.each do |item| %>
+    <li>
+      <%= item.product.name %> —
+      Quantity: <%= item.quantity %>,
+      Price: $<%= '%.2f' % item.price %>
+    </li>
+  <% end %>
+</ul>
+
+<p><strong>Subtotal:</strong> $<%= '%.2f' % @subtotal %></p>
+
+<% if @order.gst.to_f > 0 %>
+  <p><strong>GST:</strong> $<%= '%.2f' % (@subtotal * @order.gst.to_f) %></p>
+<% end %>
+
+<% if @order.pst.to_f > 0 %>
+  <p><strong>PST:</strong> $<%= '%.2f' % (@subtotal * @order.pst.to_f) %></p>
+<% end %>
+
+<% if @order.hst.to_f > 0 %>
+  <p><strong>HST:</strong> $<%= '%.2f' % (@subtotal * @order.hst.to_f) %></p>
+<% end %>
+
+<p><strong>Total Tax:</strong> $<%= '%.2f' % @taxes %></p>
+<p><strong>Total:</strong> $<%= '%.2f' % @total %></p>
+
+<%= link_to "Back to Shop", products_path %>

@@ -1,6 +1,29 @@
 <%= render "shared/breadcrumbs" %>
+
+<!-- Top Navigation -->
+<nav style="display: flex; justify-content: space-between; align-items: center; padding: 10px; border-bottom: 1px solid #ccc;">
+  <div>
+    <%= link_to 'Home', root_path %> |
+    <%= link_to 'All Products', products_path %>
+  </div>
+  <div>
+    <%= link_to '🛒Shopping Cart', cart_path %> |
+    
+    <% if customer_signed_in? %>
+      <%= current_customer.email %> |
+      <%= link_to 'Logout', destroy_customer_session_path, method: :delete %> |
+      <%= link_to 'My Past Orders', orders_path %>
+    <% else %>
+      <%= link_to 'Login', new_customer_session_path %> |
+      <%= link_to 'Sign Up', new_customer_registration_path %>
+    <% end %>
+  </div>
+</nav>
+
+
 <h1>All Products</h1>
 
+<!-- Search Section -->
 <h2>Search Products</h2>
 <%= form_with url: products_path, method: :get, local: true do %>
   <div>
@@ -14,9 +37,7 @@
   </div>
 <% end %>
 
-
-
-
+<!-- Filter Section -->
 <h2>Filter Products</h2>
 <ul>
   <li><%= link_to "All Products", products_path %></li>
@@ -27,23 +48,13 @@
 
 <hr>
 
+<!-- Products Listing -->
 <% if @products.any? %>
-  <% @products.each do |product| %>
-    <div style="border: 1px solid #ccc; padding: 10px; margin-bottom: 20px;">
-      <h2><%= link_to product.name, product_path(product) %></h2>
-
-      <% if product.image.attached? %>
-        <%= image_tag url_for(product.image), size: "200x200" %>
-      <% else %>
-        <p><strong>No image available</strong></p>
-      <% end %>
-
-      <p><%= product.description %></p>
-      <p><strong>Price:</strong> $<%= product.price %></p>
-      <p><strong>Stock:</strong> <%= product.stock %></p>
-      <p><strong>Category:</strong> <%= product.category.name if product.category %></p>
-    </div>
-  <% end %>
+  <div style="display: flex; flex-wrap: wrap; gap: 20px;">
+    <% @products.each do |product| %>
+      <%= render partial: "product", locals: { product: product } %>
+    <% end %>
+  </div>
 
   <div style="margin-top: 20px;">
     <%= paginate @products %>

@@ -17,6 +17,7 @@ class ProductsController < ApplicationController
       @products = @products.where("created_at >= ?", 3.days.ago)
     when "updated"
       @products = @products.where("updated_at >= ? AND created_at < ?", 3.days.ago, 3.days.ago)
+
     end
 
     @products = @products.page(params[:page]).per(10)
